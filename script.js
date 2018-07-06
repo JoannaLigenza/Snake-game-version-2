@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	const canvas = document.getElementById("canvas");
 	const context = canvas.getContext("2d");
 	
+	let which_key_pressed;
+	
 	let snake_position_x = 20;
 	let snake_position_y = 20;
 	snake_width = 60;
@@ -21,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	//context.fillRect(snake_position_x, snake_position_y, snake_width, snake_length);
 	
-	let which_key_pressed;
+	
 		
 	function check_key() { 
 		document.addEventListener("keydown", function(e) {
@@ -30,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	
 	function set_direction() {
-		let direction;
+		let direction = "right";
 		if (which_key_pressed == "ArrowRight") {
 			direction = "right";
 		}
@@ -56,35 +58,29 @@ document.addEventListener('DOMContentLoaded', function() {
 		//for (i=0; i < snake.length; i++) { 
 		//snake goes to right
 		if (set_direction() == "right") { 
-			
 			snake.unshift([snake[0][0]+stepX, snake[0][1], 10, 10]);
-			//snake[0][0] += stepX;
-			//snake[0][1] = snake[0][1];
-			snake.pop(snake[snake.length-1]);
+			//snake.pop(snake[snake.length-1]);
 		}
 		//snake goes to left
 		if (set_direction() == "left") { 
-		
 			snake.unshift([snake[0][0]-stepX, snake[0][1], 10, 10]);
-			snake.pop(snake[snake.length-1]);
-			//snake[0][0] -= stepX;
-			//snake[0][1] = snake[0][1];
+			//snake.pop(snake[snake.length-1]);
 		}
 		//snake goes up
 		if (set_direction() == "up") { 
 			snake.unshift([snake[0][0], snake[0][1]-stepY, 10, 10]);
-			snake.pop(snake[snake.length-1]);
-			//snake[0][0] = snake[0][0];
-			//snake[0][1] -= stepY;
+			//snake.pop(snake[snake.length-1]);
 		}
 		//snake goes down
 		if (set_direction() == "down") { 
 			snake.unshift([snake[0][0], snake[0][1]+stepY, 10, 10]);
-			snake.pop(snake[snake.length-1]);
-			//snake[0][0] = snake[0][0];
-			//snake[0][1] += stepY;
+			//snake.pop(snake[snake.length-1]);
 		}
-		
+		if (food_x !== snake[0][0] || food_y !== snake[0][1] ) {
+			snake.pop(snake[snake.length-1]);
+			// zmien wspolrzedne foodA
+		}
+		eat_food();
 		for (i=0; i < snake.length; i++) { 
 			context.fillRect(snake[i][0], snake[i][1], snake[i][2], snake[i][3]);
 		}
@@ -127,6 +123,15 @@ document.addEventListener('DOMContentLoaded', function() {
 		context.fillRect(random_x, random_y, 10, 10);
 	}
 	
+	function eat_food() {
+		if (food_x == snake[0][0] && food_y == snake[0][1] ) {
+			random_coordinates_for_food();
+			food_x = random_coordinates_for_food()[0];
+			food_y = random_coordinates_for_food()[1]
+			console.log("eat food")
+		}
+	}
+	
 	
 	function collision() {
 		if (snake[0][0] < 0 || snake[0][0] > canvas.width || snake[0][1] < 0 || snake[0][1] > canvas.height) {
@@ -166,8 +171,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		}, 100);
 	} 
 	
-	const food_x = random_coordinates_for_food()[0]
-	const food_y = random_coordinates_for_food()[1]
+	let food_x = random_coordinates_for_food()[0]
+	let food_y = random_coordinates_for_food()[1]
 	console.log(food_x, food_y)
 	
 	
