@@ -1,5 +1,29 @@
 
+body {
+	position: relative;
+}
+
 canvas {
-	margin: 0 auto;
+	position: absolute; 
 	border: 1px solid black;
+	z-index: 2;
+}
+
+#end_game_div {
+	width: 300px;
+	height: 200px;
+	background-color: yellow;
+	border: 2px solid black;
+	margin: 0 auto;
+	text-align: center;
+	font-size: 20px;
+	z-index: 1;
+	position: absolute;
+	left: 10px;
+	top: 10px;
+	
+}
+
+#play_again_button {
+	margin: 20px 0;
 }

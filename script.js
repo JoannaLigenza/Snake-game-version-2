@@ -1,6 +1,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 	
+	const body = document.querySelector("body");
 	const canvas = document.getElementById("canvas");
 	const context = canvas.getContext("2d");
 	
@@ -8,8 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	let snake_position_y = 20;
 	snake_width = 60;
 	snake_length = 20;
-	//const snake = [ [40, 20, 10, 10], [30, 20, 10, 10], [20, 20, 10, 10]  ]
-	const snake = [ [20, 40, 10, 10], [20, 30, 10, 10], [20, 20, 10, 10]  ]
+	const snake = [ [40, 20, 10, 10], [30, 20, 10, 10], [20, 20, 10, 10]  ]
 	
 	const stepX = 10;
 	const stepY = 10;
@@ -59,7 +59,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			//snake[0][0] += stepX;
 			//snake[0][1] = snake[0][1];
 			snake.pop(snake[snake.length-1]);
-			console.log(snake);
 		}
 		//snake goes to left
 		if (set_direction() == "left") { 
@@ -84,29 +83,44 @@ document.addEventListener('DOMContentLoaded', function() {
 			//snake[0][1] += stepY;
 		}
 		
-		//snake_position_x += stepX;
-		//snake_position_y = snake_position_y;
-		
-		//snake goes to left
-		//snake_position_x -= stepX;
-		//snake_position_y = snake_position_y;
-		
-		//snake goes down
-		//snake_position_x = snake_position_x;
-		//snake_position_y += stepY;
-		
-		//snake goes up
-		//snake_position_x = snake_position_x;
-		//snake_position_y -= stepY;
-		
 		for (i=0; i < snake.length; i++) { 
 			context.fillRect(snake[i][0], snake[i][1], snake[i][2], snake[i][3]);
 		}
 	}
 	
+	function collision() {
+		if (snake[0][0] < 0 || snake[0][0] > canvas.width || snake[0][1] < 0 || snake[0][1] > canvas.height) {
+			console.log("zderzenie");
+			game_over();
+			return;
+		}
+	}
+	
+	function game_over() {
+		const play_again_button = document.createElement("button");
+		const end_game_div = document.createElement("div");
+		const end_game_div_header = document.createElement("h2");
+		end_game_div.id = "end_game_div";
+		end_game_div.zIndex = 30;
+		end_game_div_header.innerText = "Game Over";
+		play_again_button.innerText = "Play Again";
+		play_again_button.id = "play_again_button";
+		body.appendChild(end_game_div);
+		end_game_div.appendChild(end_game_div_header);
+		end_game_div.appendChild(play_again_button);		
+	}
+	
 	function loop() {
+		// collision check
+		if (snake[0][0] < 0 || snake[0][0] >= canvas.width || snake[0][1] < 0 || snake[0][1] >= canvas.height) {
+			console.log("zderzenie");
+			game_over();
+			return;
+		} 
+		
+		//collision();
 		//console.log(snake);
-		console.log(which_key_pressed);
+		//console.log(which_key_pressed);
 		draw_snake();
 		setTimeout(function() {
 			const req = requestAnimationFrame(loop); 
@@ -117,10 +131,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 	
 	const buton = document.getElementById("buton");
-	
-	buton.addEventListener("click", function() {
-		draw_snake();
-	})
 	
 	check_key();
 	set_direction();
