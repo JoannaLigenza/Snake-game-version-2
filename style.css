@@ -1,6 +1,10 @@
 
-body {
+#div_with_canvas {
 	position: relative;
+	border: 1px solid red;
+	width: 500px;
+	height: 400px;
+	margin: 0 auto;
 }
 
 canvas {
@@ -19,11 +23,21 @@ canvas {
 	font-size: 20px;
 	z-index: 1;
 	position: absolute;
-	left: 10px;
+	left: 100px;
 	top: 10px;
 	
 }
 
 #play_again_button {
 	margin: 20px 0;
+}
+
+#score {
+	display: block;
+	width: 500px;
+	height: 100px;
+	margin: 0 auto;
+	text-align: center;
+	padding: 50px;
+	font-size: 25px;
 }

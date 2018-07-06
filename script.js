@@ -1,7 +1,8 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 	
-	const body = document.querySelector("body");
+	const div_with_canvas = document.getElementById("div_with_canvas");
+	const div_score = document.getElementById("score");
 	const canvas = document.getElementById("canvas");
 	const context = canvas.getContext("2d");
 	
@@ -15,6 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	const stepX = 10;
 	const stepY = 10;
+	
+	let score = 0;
 	
 	context.fillStyle = "green";
 	context.fillRect(snake[0][0], snake[0][1], snake[0][2], snake[0][3]);
@@ -113,8 +116,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 		const random_x = canvas_width_minus_snake[Math.floor(Math.random() * canvas_width_minus_snake.length)];
 		const random_y = canvas_height_minus_snake[Math.floor(Math.random() * canvas_height_minus_snake.length)];
-			console.log("width: ", canvas_width_minus_snake);
-			console.log("height: ", canvas_height_minus_snake);
+			//console.log("width: ", canvas_width_minus_snake);
+			//console.log("height: ", canvas_height_minus_snake);
 		return [random_x, random_y];
 	}
 	
@@ -128,17 +131,31 @@ document.addEventListener('DOMContentLoaded', function() {
 			random_coordinates_for_food();
 			food_x = random_coordinates_for_food()[0];
 			food_y = random_coordinates_for_food()[1]
+			score += 10;
 			console.log("eat food")
 		}
 	}
+
+	
+	function count_score() {
+		div_score.innerText = "Your score is: " + score;
+	}
 	
 	
-	function collision() {
-		if (snake[0][0] < 0 || snake[0][0] > canvas.width || snake[0][1] < 0 || snake[0][1] > canvas.height) {
+	function check_collision(req) {
+		for (i=1; i < snake.length; i++) {
+			// snake eat itself
+			if (snake[0][0] == snake[i][0] && snake[0][1] == snake[i][1] ) { 
+				game_over();
+				cancelAnimationFrame(req);
+			}
+		}
+		// snake hits the wall
+		if (snake[0][0] < 0 || snake[0][0] >= canvas.width || snake[0][1] < 0 || snake[0][1] >= canvas.height ) {
 			console.log("zderzenie");
 			game_over();
-			return;
-		}
+			cancelAnimationFrame(req);
+		} 
 	}
 	
 	function game_over() {
@@ -150,24 +167,18 @@ document.addEventListener('DOMContentLoaded', function() {
 		end_game_div_header.innerText = "Game Over";
 		play_again_button.innerText = "Play Again";
 		play_again_button.id = "play_again_button";
-		body.appendChild(end_game_div);
+		div_with_canvas.appendChild(end_game_div);
 		end_game_div.appendChild(end_game_div_header);
-		end_game_div.appendChild(play_again_button);		
+		end_game_div.appendChild(play_again_button);
 	}
 	
 	function loop() {
-		// collision check
-		if (snake[0][0] < 0 || snake[0][0] >= canvas.width || snake[0][1] < 0 || snake[0][1] >= canvas.height) {
-			console.log("zderzenie");
-			game_over();
-			return;
-		} 
-		//collision();
-		//console.log(snake);
-		//console.log(which_key_pressed);
+		console.log("idzie");
 		draw_snake();
+		count_score(score);
 		setTimeout(function() {
 			const req = requestAnimationFrame(loop); 
+			check_collision(req);
 		}, 100);
 	} 
 	
