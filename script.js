@@ -51,6 +51,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	function draw_snake() {
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		
+		draw_food(food_x, food_y);
+		
 		//for (i=0; i < snake.length; i++) { 
 		//snake goes to right
 		if (set_direction() == "right") { 
@@ -89,13 +91,42 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	
 	function random_coordinates_for_food() {
-		// rounded to full dozens number - zaokraglenie losowej liczby do pelnych dziesiatek
-		// random number x: 254 -> 254/10 = 25,4 -> math.floor 25,4 = 25 -> 25 * 10 = 250
-		const random_x = Math.floor((Math.random() * canvas.width)/10) * 10;
-		const random_y = Math.floor((Math.random() * canvas.height)/10) * 10;
-		console.log("x: " ,random_x);
-		console.log("y: ",random_y);
+		const canvas_width_minus_snake = []
+		const canvas_height_minus_snake = []
+		for (i=0; i < canvas.width; i++) {
+			// every number of canvas width are division in 10. If some of them has no modulo rest, put it in the array
+			if ( i % 10 === 0) {
+				canvas_width_minus_snake.push(i);
+			}
+		}
+		for (i=0; i < canvas.height; i++) {
+			if ( i % 10 === 0) {
+				canvas_height_minus_snake.push(i);
+			}
+		}
+			// remove snake coordinates from canvas_width_minus_snake and canvas_height_minus_snake
+		for (i=0; i < snake.length; i++) {
+			const index_of_snake_x_position = canvas_width_minus_snake.indexOf(snake[i][0]);
+			const index_of_snake_y_position = canvas_height_minus_snake.indexOf(snake[i][1]);
+			if (index_of_snake_x_position != -1) { 
+				canvas_width_minus_snake.splice(index_of_snake_x_position,1);
+			}
+			if (index_of_snake_y_position != -1) { 
+				canvas_height_minus_snake.splice(index_of_snake_y_position,1);
+			}
+		}
+		const random_x = canvas_width_minus_snake[Math.floor(Math.random() * canvas_width_minus_snake.length)];
+		const random_y = canvas_height_minus_snake[Math.floor(Math.random() * canvas_height_minus_snake.length)];
+			console.log("width: ", canvas_width_minus_snake);
+			console.log("height: ", canvas_height_minus_snake);
+		return [random_x, random_y];
 	}
+	
+	function draw_food(random_x, random_y) {
+		//context.fillStyle = "red";
+		context.fillRect(random_x, random_y, 10, 10);
+	}
+	
 	
 	function collision() {
 		if (snake[0][0] < 0 || snake[0][0] > canvas.width || snake[0][1] < 0 || snake[0][1] > canvas.height) {
@@ -126,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			game_over();
 			return;
 		} 
-		random_coordinates_for_food();
 		//collision();
 		//console.log(snake);
 		//console.log(which_key_pressed);
@@ -136,13 +166,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		}, 100);
 	} 
 	
-		
-		
+	const food_x = random_coordinates_for_food()[0]
+	const food_y = random_coordinates_for_food()[1]
+	console.log(food_x, food_y)
 	
-	const buton = document.getElementById("buton");
 	
 	check_key();
 	set_direction();
 	loop();
+	random_coordinates_for_food();
 	
 });
