@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	const stepY = 10;
 	
 	let score = 0;
+	//let speed = 100;
 	
 	context.fillStyle = "green";
 	context.fillRect(snake[0][0], snake[0][1], snake[0][2], snake[0][3]);
@@ -172,14 +173,41 @@ document.addEventListener('DOMContentLoaded', function() {
 		end_game_div.appendChild(play_again_button);
 	}
 	
+	function snake_speed() {
+		let speed = 100;
+		if(score < 30 && score >= 0){
+			speed = 100
+		}
+		if(score < 60 && score >= 30){
+			speed = 80
+		}
+		if(score < 90 && score >= 60){
+			speed = 60
+		}
+		if(score < 120 && score >= 90){
+			speed = 50
+		}
+		if(score < 140 && score >= 120){
+			speed = 40
+		}
+		if(score < 160 && score >= 140){
+			speed = 30
+		}
+		if(score >= 160){
+			speed = 20
+		}
+		return speed;
+	}
+	
 	function loop() {
 		console.log("idzie");
+		console.log(snake_speed());
 		draw_snake();
 		count_score(score);
 		setTimeout(function() {
 			const req = requestAnimationFrame(loop); 
 			check_collision(req);
-		}, 100);
+		}, snake_speed());
 	} 
 	
 	let food_x = random_coordinates_for_food()[0]
