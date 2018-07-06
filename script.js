@@ -88,6 +88,15 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	}
 	
+	function random_coordinates_for_food() {
+		// rounded to full dozens number - zaokraglenie losowej liczby do pelnych dziesiatek
+		// random number x: 254 -> 254/10 = 25,4 -> math.floor 25,4 = 25 -> 25 * 10 = 250
+		const random_x = Math.floor((Math.random() * canvas.width)/10) * 10;
+		const random_y = Math.floor((Math.random() * canvas.height)/10) * 10;
+		console.log("x: " ,random_x);
+		console.log("y: ",random_y);
+	}
+	
 	function collision() {
 		if (snake[0][0] < 0 || snake[0][0] > canvas.width || snake[0][1] < 0 || snake[0][1] > canvas.height) {
 			console.log("zderzenie");
@@ -117,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			game_over();
 			return;
 		} 
-		
+		random_coordinates_for_food();
 		//collision();
 		//console.log(snake);
 		//console.log(which_key_pressed);
