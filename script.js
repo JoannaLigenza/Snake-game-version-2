@@ -6,129 +6,130 @@ document.addEventListener('DOMContentLoaded', function() {
 	const canvas = document.getElementById("canvas");
 	const context = canvas.getContext("2d");
 	
-	let which_key_pressed;
-	let score = 0;
-	let direction = "right";
-	
 	const snake_width = 10;
 	const snake_height = 10;
 	const snake = [ [40, 20, snake_width, snake_height], [30, 20, snake_width, snake_height], [20, 20, snake_width, snake_height]  ]
 	
-	
+	const direct = { 
+		direction: "right",
 		
-	function check_key() { 
-		document.addEventListener("keydown", function(e) {
-			which_key_pressed = e.key;
-			console.log(which_key_pressed);
-		})
-	}
-	
-	
-	function set_direction() {
-		if (which_key_pressed == "ArrowRight" && direction != "left") {
-			direction = "right";
-		}
-		if (which_key_pressed == "ArrowLeft" && direction != "right") {
-			direction = "left";
-		}
-		if (which_key_pressed == "ArrowUp" && direction != "down") {
-			direction = "up";
-		}
-		if (which_key_pressed == "ArrowDown" && direction != "up") {
-			direction = "down";
-		}
+		check_key: function() { 
+			document.addEventListener("keydown", function(e) {
+				which_key_pressed = e.key;
+				direct.set_direction(which_key_pressed)
+				//console.log(this.which_key_pressed);
+			})
+		},
 		
-		return direction;
-	}
-		
+		set_direction: function(which_key_pressed) {
+			if (which_key_pressed == "ArrowRight" && this.direction != "left") {
+				this.direction = "right";
+			}
+			if (which_key_pressed == "ArrowLeft" && this.direction != "right") {
+				this.direction = "left";
+			}
+			if (which_key_pressed == "ArrowUp" && this.direction != "down") {
+				this.direction = "up";
+			}
+			if (which_key_pressed == "ArrowDown" && this.direction != "up") {
+				this.direction = "down";
+			}
+			return this.direction;
+		}
+	}	
 	
 	function draw_snake() {
 		let stepX = 0;
 		let stepY = 0;
 		context.clearRect(0, 0, canvas.width, canvas.height);
-		
-		draw_food(food_x, food_y);
-		
+			
+		draw.draw_food(draw.random_x, draw.random_x);
+			
 		//for (i=0; i < snake.length; i++) { 
 		//snake goes to right
-		if (set_direction() == "right") { 
+		if (direct.set_direction() == "right") { 
 			stepX = 10;
 		}
 		//snake goes to left
-		if (set_direction() == "left") { 
+		if (direct.set_direction() == "left") { 
 			stepX = -10;
 		}
 		//snake goes up
-		if (set_direction() == "up") { 
+		if (direct.set_direction() == "up") { 
 			stepY = -10;
 		}
 		//snake goes down
-		if (set_direction() == "down") { 
+		if (direct.set_direction() == "down") { 
 			stepY = 10;
 		}
 		snake.unshift([snake[0][0]+stepX, snake[0][1]+stepY, snake_width, snake_height])
-		if (food_x !== snake[0][0] || food_y !== snake[0][1] ) {
+		if (draw.random_x !== snake[0][0] || draw.random_y !== snake[0][1] ) {
 			snake.pop(snake[snake.length-1]);
 		}
-		eat_food();
+		draw.eat_food();
 		for (i=0; i < snake.length; i++) { 
 			context.fillStyle = "green";
 			context.fillRect(snake[i][0], snake[i][1], snake[i][2], snake[i][3]);
 		}
 	}
-	
-	function random_coordinates_for_food() {
-		const canvas_width_minus_snake = []
-		const canvas_height_minus_snake = []
-		for (i=0; i < canvas.width; i++) {
-			// every number of canvas width are division in 10. If some of them has no modulo rest, put it in the array
-			if ( i % 10 === 0) {
-				canvas_width_minus_snake.push(i);
+		
+	const draw = { 
+		random_x: "",
+		random_y: "",
+		
+		random_coordinates_for_food: function() {
+			const canvas_width_minus_snake = []
+			const canvas_height_minus_snake = []
+			for (i=0; i < canvas.width; i++) {
+				// every number of canvas width are division in 10. If some of them has no modulo rest, put it in the array
+				if ( i % 10 === 0) {
+					canvas_width_minus_snake.push(i);
+				}
+			}
+			for (i=0; i < canvas.height; i++) {
+				if ( i % 10 === 0) {
+					canvas_height_minus_snake.push(i);
+				}
+			}
+				// remove snake coordinates from canvas_width_minus_snake and canvas_height_minus_snake
+			for (i=0; i < snake.length; i++) {
+				const index_of_snake_x_position = canvas_width_minus_snake.indexOf(snake[i][0]);
+				const index_of_snake_y_position = canvas_height_minus_snake.indexOf(snake[i][1]);
+				if (index_of_snake_x_position != -1) { 
+					canvas_width_minus_snake.splice(index_of_snake_x_position,1);
+				}
+				if (index_of_snake_y_position != -1) { 
+					canvas_height_minus_snake.splice(index_of_snake_y_position,1);
+				}
+			}
+			this.random_x = canvas_width_minus_snake[Math.floor(Math.random() * canvas_width_minus_snake.length)];
+			this.random_y = canvas_height_minus_snake[Math.floor(Math.random() * canvas_height_minus_snake.length)];
+		},
+		
+		draw_food: function() {
+			context.fillRect(this.random_x, this.random_y, snake_width, snake_height);
+		},
+		
+		eat_food: function() {
+			if (this.random_x == snake[0][0] && this.random_y == snake[0][1] ) {
+				console.log("eat food");
+				draw.random_coordinates_for_food();
+				set_score.score += 10;
 			}
 		}
-		for (i=0; i < canvas.height; i++) {
-			if ( i % 10 === 0) {
-				canvas_height_minus_snake.push(i);
-			}
-		}
-			// remove snake coordinates from canvas_width_minus_snake and canvas_height_minus_snake
-		for (i=0; i < snake.length; i++) {
-			const index_of_snake_x_position = canvas_width_minus_snake.indexOf(snake[i][0]);
-			const index_of_snake_y_position = canvas_height_minus_snake.indexOf(snake[i][1]);
-			if (index_of_snake_x_position != -1) { 
-				canvas_width_minus_snake.splice(index_of_snake_x_position,1);
-			}
-			if (index_of_snake_y_position != -1) { 
-				canvas_height_minus_snake.splice(index_of_snake_y_position,1);
-			}
-		}
-		const random_x = canvas_width_minus_snake[Math.floor(Math.random() * canvas_width_minus_snake.length)];
-		const random_y = canvas_height_minus_snake[Math.floor(Math.random() * canvas_height_minus_snake.length)];
-			//console.log("width: ", canvas_width_minus_snake);
-			//console.log("height: ", canvas_height_minus_snake);
-		return [random_x, random_y];
 	}
 	
-	function draw_food(random_x, random_y) {
-		//context.fillStyle = "red";
-		context.fillRect(random_x, random_y, snake_width, snake_height);
-	}
+	const set_score = { 
+		score: 0,
 	
-	function eat_food() {
-		if (food_x == snake[0][0] && food_y == snake[0][1] ) {
-			random_coordinates_for_food();
-			food_x = random_coordinates_for_food()[0];
-			food_y = random_coordinates_for_food()[1]
-			score += 10;
-			console.log("eat food")
+		count_score: function() {
+			div_score.innerText = "Your score is: " + this.score;
+		},
+		
+		return_score: function() {
+			return this.score;
 		}
 	}
-
-	
-	function count_score() {
-		div_score.innerText = "Your score is: " + score;
-	}
-	
 	
 	function check_collision(req) {
 		for (i=1; i < snake.length; i++) {
@@ -140,7 +141,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 		// snake hits the wall
 		if (snake[0][0] < 0 || snake[0][0] >= canvas.width || snake[0][1] < 0 || snake[0][1] >= canvas.height ) {
-			console.log("zderzenie");
 			game_over();
 			cancelAnimationFrame(req);
 		} 
@@ -162,25 +162,25 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	function snake_speed() {
 		let speed = 100;
-		if(score < 30 && score >= 0){
+		if(set_score.score < 30 && set_score.score >= 0){
 			speed = 100
 		}
-		if(score < 60 && score >= 30){
+		if(set_score.score < 60 && set_score.score >= 30){
 			speed = 80
 		}
-		if(score < 90 && score >= 60){
+		if(set_score.score < 90 && set_score.score >= 60){
 			speed = 60
 		}
-		if(score < 120 && score >= 90){
+		if(set_score.score < 120 && set_score.score >= 90){
 			speed = 50
 		}
-		if(score < 140 && score >= 120){
+		if(set_score.score < 140 && set_score.score >= 120){
 			speed = 40
 		}
-		if(score < 160 && score >= 140){
+		if(set_score.score < 160 && set_score.score >= 140){
 			speed = 30
 		}
-		if(score >= 160){
+		if(set_score.score >= 160){
 			speed = 20
 		}
 		return speed;
@@ -190,24 +190,17 @@ document.addEventListener('DOMContentLoaded', function() {
 		//console.log("idzie");
 		//console.log(snake_speed());
 		draw_snake();
-		count_score(score);
+		set_score.count_score();
 		setTimeout(function() {
 			const req = requestAnimationFrame(loop); 
 			check_collision(req);
 		}, snake_speed());
 	} 
 	
-	let food_x = random_coordinates_for_food()[0]
-	let food_y = random_coordinates_for_food()[1]
-	console.log(food_x, food_y)
-	
-	
-	check_key();
-	set_direction();
+	direct.check_key();
 	loop();
-	random_coordinates_for_food();
+	draw.random_coordinates_for_food();
 	
-	// ukryte zmienne globalne
 	// snake_speed zamien na funkcje uniwersalna (petla? )
 
 });
