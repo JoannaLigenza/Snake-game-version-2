@@ -7,25 +7,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	const context = canvas.getContext("2d");
 	
 	let which_key_pressed;
-	
-	let snake_position_x = 20;
-	let snake_position_y = 20;
-	snake_width = 60;
-	snake_length = 20;
-	const snake = [ [40, 20, 10, 10], [30, 20, 10, 10], [20, 20, 10, 10]  ]
-	
-	const stepX = 10;
-	const stepY = 10;
-	
 	let score = 0;
-	//let speed = 100;
 	
-	context.fillStyle = "green";
-	context.fillRect(snake[0][0], snake[0][1], snake[0][2], snake[0][3]);
-	context.fillRect(snake[1][0], snake[1][1], snake[1][2], snake[1][3]);
-	context.fillRect(snake[2][0], snake[2][1], snake[2][2], snake[2][3]);
-	
-	//context.fillRect(snake_position_x, snake_position_y, snake_width, snake_length);
+	const snake_width = 10;
+	const snake_height = 10;
+	const snake = [ [40, 20, snake_width, snake_height], [30, 20, snake_width, snake_height], [20, 20, snake_width, snake_height]  ]
 	
 	
 		
@@ -55,6 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 	
 	function draw_snake() {
+		let stepX = 0;
+		let stepY = 0;
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		
 		draw_food(food_x, food_y);
@@ -62,30 +50,27 @@ document.addEventListener('DOMContentLoaded', function() {
 		//for (i=0; i < snake.length; i++) { 
 		//snake goes to right
 		if (set_direction() == "right") { 
-			snake.unshift([snake[0][0]+stepX, snake[0][1], 10, 10]);
-			//snake.pop(snake[snake.length-1]);
+			stepX = 10;
 		}
 		//snake goes to left
 		if (set_direction() == "left") { 
-			snake.unshift([snake[0][0]-stepX, snake[0][1], 10, 10]);
-			//snake.pop(snake[snake.length-1]);
+			stepX = -10;
 		}
 		//snake goes up
 		if (set_direction() == "up") { 
-			snake.unshift([snake[0][0], snake[0][1]-stepY, 10, 10]);
-			//snake.pop(snake[snake.length-1]);
+			stepY = -10;
 		}
 		//snake goes down
 		if (set_direction() == "down") { 
-			snake.unshift([snake[0][0], snake[0][1]+stepY, 10, 10]);
-			//snake.pop(snake[snake.length-1]);
+			stepY = 10;
 		}
+		snake.unshift([snake[0][0]+stepX, snake[0][1]+stepY, snake_width, snake_height])
 		if (food_x !== snake[0][0] || food_y !== snake[0][1] ) {
 			snake.pop(snake[snake.length-1]);
-			// zmien wspolrzedne foodA
 		}
 		eat_food();
 		for (i=0; i < snake.length; i++) { 
+			context.fillStyle = "green";
 			context.fillRect(snake[i][0], snake[i][1], snake[i][2], snake[i][3]);
 		}
 	}
@@ -124,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	function draw_food(random_x, random_y) {
 		//context.fillStyle = "red";
-		context.fillRect(random_x, random_y, 10, 10);
+		context.fillRect(random_x, random_y, snake_width, snake_height);
 	}
 	
 	function eat_food() {
@@ -220,4 +205,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	loop();
 	random_coordinates_for_food();
 	
+	// ukryte zmienne globalne
+	// naprawic kierunki lewo-prawo
+	// snake_speed zamien na funkcje uniwersalna (petla? )
+			// wspolrzedne snake - 10 zamien na zmienne
+	// draw_snake step = 0 i w ifach ustawiasz step na +10 lub -10
 });
