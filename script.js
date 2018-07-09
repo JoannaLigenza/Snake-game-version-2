@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	let which_key_pressed;
 	let score = 0;
+	let direction = "right";
 	
 	const snake_width = 10;
 	const snake_height = 10;
@@ -18,21 +19,22 @@ document.addEventListener('DOMContentLoaded', function() {
 	function check_key() { 
 		document.addEventListener("keydown", function(e) {
 			which_key_pressed = e.key;
+			console.log(which_key_pressed);
 		})
 	}
 	
+	
 	function set_direction() {
-		let direction = "right";
-		if (which_key_pressed == "ArrowRight") {
+		if (which_key_pressed == "ArrowRight" && direction != "left") {
 			direction = "right";
 		}
-		if (which_key_pressed == "ArrowLeft") {
+		if (which_key_pressed == "ArrowLeft" && direction != "right") {
 			direction = "left";
 		}
-		if (which_key_pressed == "ArrowUp") {
+		if (which_key_pressed == "ArrowUp" && direction != "down") {
 			direction = "up";
 		}
-		if (which_key_pressed == "ArrowDown") {
+		if (which_key_pressed == "ArrowDown" && direction != "up") {
 			direction = "down";
 		}
 		
@@ -185,8 +187,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	
 	function loop() {
-		console.log("idzie");
-		console.log(snake_speed());
+		//console.log("idzie");
+		//console.log(snake_speed());
 		draw_snake();
 		count_score(score);
 		setTimeout(function() {
@@ -206,8 +208,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	random_coordinates_for_food();
 	
 	// ukryte zmienne globalne
-	// naprawic kierunki lewo-prawo
 	// snake_speed zamien na funkcje uniwersalna (petla? )
-			// wspolrzedne snake - 10 zamien na zmienne
-	// draw_snake step = 0 i w ifach ustawiasz step na +10 lub -10
+
 });
