@@ -41,11 +41,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	function draw_snake() {
 		let stepX = 0;
 		let stepY = 0;
-		context.clearRect(0, 0, canvas.width, canvas.height);
-			
+		context.clearRect(0, 0, canvas.width, canvas.height);	
 		draw.draw_food(draw.random_x, draw.random_x);
-			
-		//for (i=0; i < snake.length; i++) { 
+
 		//snake goes to right
 		if (direct.set_direction() == "right") { 
 			stepX = 10;
@@ -168,34 +166,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	
 	function snake_speed() {
-		let speed = 100;
-		if(set_score.score < 30 && set_score.score >= 0){
-			speed = 100
-		}
-		if(set_score.score < 60 && set_score.score >= 30){
-			speed = 80
-		}
-		if(set_score.score < 90 && set_score.score >= 60){
-			speed = 60
-		}
-		if(set_score.score < 120 && set_score.score >= 90){
-			speed = 50
-		}
-		if(set_score.score < 140 && set_score.score >= 120){
-			speed = 40
-		}
-		if(set_score.score < 160 && set_score.score >= 140){
-			speed = 30
-		}
-		if(set_score.score >= 160){
-			speed = 20
+		let speed = 100 - set_score.score/5;
+		if (speed < 20) {
+			speed = 20;
 		}
 		return speed;
 	}
 	
 	function loop() {
-		//console.log("idzie");
-		//console.log(snake_speed());
 		draw_snake();
 		set_score.count_score();
 		setTimeout(function() {
@@ -207,7 +185,5 @@ document.addEventListener('DOMContentLoaded', function() {
 	direct.check_key();
 	loop();
 	draw.random_coordinates_for_food();
-	
-	// snake_speed zamien na funkcje uniwersalna (petla? )
 
 });
