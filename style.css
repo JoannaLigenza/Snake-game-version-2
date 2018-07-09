@@ -1,7 +1,6 @@
 
 #div_with_canvas {
 	position: relative;
-	border: 1px solid red;
 	width: 500px;
 	height: 400px;
 	margin: 0 auto;
@@ -30,6 +29,7 @@ canvas {
 
 #play_again_button {
 	margin: 20px 0;
+	display: block;
 }
 
 #score {

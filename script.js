@@ -157,7 +157,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		play_again_button.id = "play_again_button";
 		div_with_canvas.appendChild(end_game_div);
 		end_game_div.appendChild(end_game_div_header);
-		end_game_div.appendChild(play_again_button);
+		div_score.appendChild(play_again_button);
+		reset_game(play_again_button);
+	}
+	
+	function reset_game(play_again_button) {
+		play_again_button.addEventListener("mousedown", function() {
+			location.reload();
+		} )
 	}
 	
 	function snake_speed() {
